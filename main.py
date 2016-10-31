@@ -1,3 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
+__author__ = 'flipchan'
+__version__ = 1.2
 #/*
 # * ----------------------------------------------------------------------------
 # * "THE BEER-WARE LICENSE" (Revision 42):
@@ -10,10 +16,13 @@
 #inspierd by https://github.com/python-otr/
 #build to provide stronger crypto in the LayerProx project
 
+#this is version 1.2 the latest crypto in layerprox
+#pgp sign and encrypt -> aes-ctr -> hmac 
 
 from Crypto.Hash import SHA256 as _SHA256
 from Crypto.Hash import SHA as _SHA1
 from Crypto.Hash import HMAC as _HMAC
+from Crypto.Cipher import AES
 
 import gnupg
 home = '' #set gpg homedir
@@ -21,6 +30,7 @@ gpg = gnupg.GPG(homedir=home)
 gpg.encoding = 'utf-8'
 fingerprint = ''#fingerprint 
 password = ''#gpg passwd
+keyide = ''#my key id
 
 #note: i does not know everything about crypto i am no expert on this is, i only do crypto as a hobby 
 #i would probelly not recommend implementing this without modifying the code, anyhow this is -->
@@ -30,7 +40,7 @@ password = ''#gpg passwd
 #
 
 
-
+#change this, its just some test inputs
 data = 'test'#test input
 key1 = '1234'#hmac key 1
 key2 = '4321'#hmac key 2
@@ -48,10 +58,12 @@ def SHA256HMAC160(key, data):
     return SHA256HMAC(key, data)[:20]
 
 
-#gpg fingerprint
-def justencrypt(key1, key2, data, fingerprint):
-	#pgp
-	thedata = gpg.encrypt()
+#sign and encrypt
+def justencrypt(key1, key2, data, fingerprint, keyide, password):
+	#crypt
+	thedata = str(data)
+	sig = gpg.sign(thedata, default_key=fingerprint, passphrase=password)
+	thedata = gpg.encrypt(sig, fingerprint) #lets just encrypt it to our selfs
 	#sha256hmac160
 	#thedate = str(thedata) + SHA256HMAC160(key1, key2)#just gen a hmac
 	thedata = str(SHA256HMAC160(key1, key2)) + str(thedata)
@@ -72,7 +84,13 @@ def justdecrypt(key1, key2, data, password):
 		#if the hmac is true verify it 
 		s = s[16:] #remove hmac
 		s = str(s)
-		data = gpg.decrypt(s, passphrase=password)
+		sig = gpg.decrypt(s, passphrase=password)
+		if not sig:
+		    break
+		verify = gpg.verify(sig.data)
+		if not verify:
+		    print 'nope not verified'
+		    break
 		return data
 	else:#if the hmac is false break *
 		break
