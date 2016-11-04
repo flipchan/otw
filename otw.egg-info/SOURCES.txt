@@ -1,0 +1,10 @@
+MANIFEST.in
+README.rst
+setup.cfg
+setup.py
+otw.egg-info/PKG-INFO
+otw.egg-info/SOURCES.txt
+otw.egg-info/dependency_links.txt
+otw.egg-info/entry_points.txt
+otw.egg-info/requires.txt
+otw.egg-info/top_level.txt
