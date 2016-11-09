@@ -16,6 +16,8 @@ __version__ = 1.2
 #inspierd by https://github.com/python-otr/
 #build to provide stronger crypto in the LayerProx project
 
+#test new version with a Quadratic Sieve prime generator
+
 #this is version 1.2 the latest crypto in layerprox
 #pgp sign and encrypt -> aes-ctr 256 -> hmac 
 
@@ -23,6 +25,9 @@ from Crypto.Hash import SHA256 as _SHA256
 from Crypto.Hash import SHA as _SHA1
 from Crypto.Hash import HMAC as _HMAC
 from Crypto.Cipher import AES
+
+import math
+from time import clock
 
 import gnupg
 home = '' #set gpg homedir
@@ -130,3 +135,29 @@ def justdecrypt(key1, key2, data, password):
 	else:#if the hmac is false break *
 		return 'error'#break
 		
+
+
+
+
+#https://codegolf.stackexchange.com/questions/8629/fastest-semiprime-factorization#9088
+#https://pypi.python.org/pypi/primefac/1.0.0
+#my try to make a Quadratic Sieve prime generator 
+def genprime():
+	#add code here, 
+	return prime
+
+
+
+#why not throw in legendre its math 
+def legendre(a, m):
+  return pow(a, (m-1) >> 1, m)
+
+
+
+
+
+
+
+
+
+
