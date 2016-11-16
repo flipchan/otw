@@ -5,12 +5,13 @@ from setuptools import setup
 # Used for the long_description.  It's nice, because now 1) we have a top level
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
+#version 1.4 should work , tested on debian
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "off the wire",
-    version = "1.3",
+    version = "1.4",
     author = "Filip Kalebo",
     author_email = "flipchan@riseup.net",
     description = ("Off the wire crypto"),

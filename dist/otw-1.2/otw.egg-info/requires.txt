@@ -1,0 +1,7 @@
+gnupg
+
+[dev]
+check-manifest
+
+[test]
+coverage

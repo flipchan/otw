@@ -1,0 +1,32 @@
+Metadata-Version: 1.1
+Name: otw
+Version: 1.4
+Summary: Off the wire crypto
+Home-page: https://github.com/flipchan/otw
+Author: Filip Kalebo
+Author-email: flipchan@riseup.net
+License: beerware
+Description: Off the wire crypto
+        =======================
+        
+        one encryption library to rule them all.
+        
+        An easy to use encryption library mainly ment for LayerProx(github.com/flipchan/LayerProx)
+        aims to be easy to use and provide strong crypto it comes with multiple functions
+        
+        the justencrypt() function encrypts the data with pgp -> aes-ctr 256 and adds
+        a hmac
+         
+        
+        ----
+        
+        
+Keywords: encryption layerprox aes aes-ctr pgp hmac
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: Beerware license
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
