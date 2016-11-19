@@ -150,7 +150,7 @@ def genprime():
 
 #why not throw in legendre its math 
 def legendre(a, m):
-  return pow(a, (m-1) >> 1, m)
+    return pow(a, (m-1) >> 1, m)
 
 
 
