@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Filename: otw.py
 
-
-__author__ = 'flipchan'
+__author__ = 'flipchan/aka\Filip Kälebo'
 __version__ = 1.2
 #/*
 # * ----------------------------------------------------------------------------
@@ -17,7 +17,7 @@ __version__ = 1.2
 #build to provide stronger crypto in the LayerProx project
 
 #this is version 1.2 the latest crypto in layerprox
-#pgp sign and encrypt -> aes-ctr -> hmac 
+#pgp sign and encrypt -> aes-ctr 256 -> hmac 
 
 from Crypto.Hash import SHA256 as _SHA256
 from Crypto.Hash import SHA as _SHA1
@@ -54,10 +54,41 @@ def HMAC(key, data, mod):
 def SHA256HMAC(key, data):
     return HMAC(key, data, _SHA256)
 
+#>>> print len(SHA256HMAC('test', 'test'))
+#32
+
+
+
+#use sha in aes-ctr?
 def SHA256HMAC160(key, data):
     return SHA256HMAC(key, data)[:20]
 
 
+#only hmac
+def genhmac(key, data):
+    SHA256HMAC160(key, data)
+    
+    
+#>>> secret = os.urandom(16)
+#>>> crypto = AES.new(os.urandom(32), AES.MODE_CTR, counter=lambda: secret)
+#>>> encrypted = crypto.encrypt("aaaaaaaaaaaaaaaa")    
+    
+
+def aesctr_decrypt(key1, key2, data):
+    decryptor = AES.new(key1, AES.MODE_CTR, counter=lambda: key2)
+    decrypted = decryptor.decrypt(data)    
+    return decrypted
+
+def aesctr_crypt(key1, key2, data):
+    key1 = SHA256HMAC(key1, data)#32
+    if len(key1) == 32 and len(key2) == 16:#32*8 256 
+	crypto = AES.new(key1, AES.MODE_CTR, counter=lambda: key2)
+	encrypted = crypto.encrypt(data)
+	return encrypted	
+    else:
+	return 'key length is not correct '
+
+    
 #sign and encrypt
 def justencrypt(key1, key2, data, fingerprint, keyide, password):
 	#crypt
@@ -65,6 +96,7 @@ def justencrypt(key1, key2, data, fingerprint, keyide, password):
 	sig = gpg.sign(thedata, default_key=fingerprint, passphrase=password)
 	thedata = gpg.encrypt(sig, fingerprint) #lets just encrypt it to our selfs
 	#sha256hmac160
+	thedata = aesctr_crypt(key1, key2, thedata) #aes-ctr it
 	#thedate = str(thedata) + SHA256HMAC160(key1, key2)#just gen a hmac
 	thedata = str(SHA256HMAC160(key1, key2)) + str(thedata)
 	#output
@@ -81,17 +113,20 @@ def justdecrypt(key1, key2, data, password):
 	theh = str(SHA256HMAC160(key1, key2))
 	#if the hmac is hmac / verify the hmac
 	if theh == hdata:
+	    #aes decrypt
 		#if the hmac is true verify it 
 		s = s[16:] #remove hmac
+		#decrypt with aes-ctr
+		s = aesctr_decrypt(key1, key2, data)
 		s = str(s)
 		sig = gpg.decrypt(s, passphrase=password)
 		if not sig:
-		    break
+		    return 'test'#   break, return ''
 		verify = gpg.verify(sig.data)
 		if not verify:
 		    print 'nope not verified'
-		    break
+		    return 'no'#break
 		return data
 	else:#if the hmac is false break *
-		break
+		return 'error'#break
 		
