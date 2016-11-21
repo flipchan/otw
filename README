@@ -1,5 +1,5 @@
 # otw
-off the wire crypto, otr with pgp + aes-ctr 256 instead of diffie hellman, with other words: pgp + aes-ctr with sha256hmac160
+off the wire crypto, otr with pgp + aes-ctr 256 instead of diffie hellman, with other words: pgp + aes-ctr with sha256hmac
 
 there is alot of different encryption libs u need to import in python to encrypt something 
 this aims to be the only library u need to import, easy to use, secure and free :)
