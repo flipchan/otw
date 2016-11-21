@@ -3,7 +3,7 @@
 # Filename: otw.py
 
 __author__ = 'flipchan/aka\Filip Kälebo'
-__version__ = 1.2
+__version__ = 1.5
 #/*
 # * ----------------------------------------------------------------------------
 # * "THE BEER-WARE LICENSE" (Revision 42):
