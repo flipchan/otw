@@ -66,7 +66,8 @@ def SHA256HMAC160(key, data):
 
 #only hmac
 def genhmac(key, data):
-    SHA256HMAC160(key, data)
+    return SHA256HMAC160(key, data)
+    
     
     
 #>>> secret = os.urandom(16)
