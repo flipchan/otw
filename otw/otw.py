@@ -3,7 +3,7 @@
 # Filename: otw.py
 
 __author__ = 'flipchan/aka\Filip Kälebo'
-__version__ = 1.2
+__version__ = 1.5
 #/*
 # * ----------------------------------------------------------------------------
 # * "THE BEER-WARE LICENSE" (Revision 42):
@@ -16,8 +16,6 @@ __version__ = 1.2
 #inspierd by https://github.com/python-otr/
 #build to provide stronger crypto in the LayerProx project
 
-#test new version with a Quadratic Sieve prime generator
-
 #this is version 1.2 the latest crypto in layerprox
 #pgp sign and encrypt -> aes-ctr 256 -> hmac 
 
@@ -25,9 +23,6 @@ from Crypto.Hash import SHA256 as _SHA256
 from Crypto.Hash import SHA as _SHA1
 from Crypto.Hash import HMAC as _HMAC
 from Crypto.Cipher import AES
-
-import math
-from time import clock
 
 import gnupg
 home = '' #set gpg homedir
@@ -71,7 +66,8 @@ def SHA256HMAC160(key, data):
 
 #only hmac
 def genhmac(key, data):
-    SHA256HMAC160(key, data)
+    return SHA256HMAC(key, data)
+    
     
     
 #>>> secret = os.urandom(16)
@@ -103,7 +99,7 @@ def justencrypt(key1, key2, data, fingerprint, keyide, password):
 	#sha256hmac160
 	thedata = aesctr_crypt(key1, key2, thedata) #aes-ctr it
 	#thedate = str(thedata) + SHA256HMAC160(key1, key2)#just gen a hmac
-	thedata = str(SHA256HMAC160(key1, key2)) + str(thedata)
+	thedata = str(genhmac(key1, key2)) + str(thedata)
 	#output
 	return thedata
 
@@ -113,14 +109,14 @@ def justdecrypt(key1, key2, data, password):
 	#verify the hmac
 	odata = data
 	s = data
-	s[:16] = hdata  #pic the first 16chars which should be the hmac
+	s[:32] = hdata  #pic the first 32chars which should be the hmac
 	hdata = str(hdata)
 	theh = str(SHA256HMAC160(key1, key2))
 	#if the hmac is hmac / verify the hmac
 	if theh == hdata:
 	    #aes decrypt
 		#if the hmac is true verify it 
-		s = s[16:] #remove hmac
+		s = s[32:] #remove hmac
 		#decrypt with aes-ctr
 		s = aesctr_decrypt(key1, key2, data)
 		s = str(s)
@@ -135,29 +131,3 @@ def justdecrypt(key1, key2, data, password):
 	else:#if the hmac is false break *
 		return 'error'#break
 		
-
-
-
-
-#https://codegolf.stackexchange.com/questions/8629/fastest-semiprime-factorization#9088
-#https://pypi.python.org/pypi/primefac/1.0.0
-#my try to make a Quadratic Sieve prime generator 
-def genprime():
-	#add code here, 
-	return prime
-
-
-
-#why not throw in legendre its math 
-def legendre(a, m):
-    return pow(a, (m-1) >> 1, m)
-
-
-
-
-
-
-
-
-
-
