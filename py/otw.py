@@ -66,7 +66,7 @@ def SHA256HMAC160(key, data):
 
 #only hmac
 def genhmac(key, data):
-    return SHA256HMAC160(key, data)
+    return SHA256HMAC(key, data)
     
     
     
@@ -99,7 +99,7 @@ def justencrypt(key1, key2, data, fingerprint, keyide, password):
 	#sha256hmac160
 	thedata = aesctr_crypt(key1, key2, thedata) #aes-ctr it
 	#thedate = str(thedata) + SHA256HMAC160(key1, key2)#just gen a hmac
-	thedata = str(SHA256HMAC160(key1, key2)) + str(thedata)
+	thedata = str(genhmac(key1, key2)) + str(thedata)
 	#output
 	return thedata
 
@@ -109,14 +109,14 @@ def justdecrypt(key1, key2, data, password):
 	#verify the hmac
 	odata = data
 	s = data
-	s[:16] = hdata  #pic the first 16chars which should be the hmac
+	s[:32] = hdata  #pic the first 32chars which should be the hmac
 	hdata = str(hdata)
 	theh = str(SHA256HMAC160(key1, key2))
 	#if the hmac is hmac / verify the hmac
 	if theh == hdata:
 	    #aes decrypt
 		#if the hmac is true verify it 
-		s = s[16:] #remove hmac
+		s = s[32:] #remove hmac
 		#decrypt with aes-ctr
 		s = aesctr_decrypt(key1, key2, data)
 		s = str(s)
